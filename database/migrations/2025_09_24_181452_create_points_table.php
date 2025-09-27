@@ -16,8 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('file_name')->unique();
             $table->string('description');
-            $table->integer('day_of_the_route');
-            $table->foreignId('route_id')->constrained('routes')->onDelete('cascade');
+            $table->string('name');
         });
     }
 

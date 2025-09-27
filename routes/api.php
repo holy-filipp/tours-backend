@@ -17,8 +17,10 @@ Route::middleware(['auth:sanctum', 'web'])->group(function() {
     Route::get('/content/udmurtia', [PageController::class, 'GetUdmurtia']);
     Route::post('/poi/create', [POIController::class, 'CreatePOI']);
     Route::get('/poi/list', [POIController::class, 'GetPOIs']);
+    Route::get('/trip/search', [TripController::class, 'FindTrips']);
 
     Route::post('/trip/image', [PointController::class, 'UploadImage'])->middleware('checkRole:admin');
     Route::post('/trip/complex', [TripController::class, 'ComplexCreateTrip'])->middleware('checkRole:admin');
+    Route::get('/trip/list', [TripController::class, 'GetTrips'])->middleware('checkRole:admin');
 });
 

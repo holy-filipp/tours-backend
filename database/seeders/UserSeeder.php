@@ -19,7 +19,8 @@ class UserSeeder extends Seeder
             "patronymic" => "Alekseevich",
             "birthday" => "21.07.2006",
             "email" => "im1@filipp.su",
-            "password" => "qwerasd1!"
+            "password" => "qwerasd1!",
+            "role" => "admin",
         ]);
     }
 }

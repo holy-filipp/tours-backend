@@ -3,13 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Point extends Model
 {
     protected $fillable = [
         'file_name',
         'description',
-        'day_of_the_route',
-        'route_id',
+        'name',
     ];
+
+    public function routes(): BelongsToMany
+    {
+        return $this->belongsToMany(Route::class, 'route_point')->withPivot('day_of_the_route');
+    }
 }

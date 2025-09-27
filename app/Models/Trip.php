@@ -11,5 +11,6 @@ class Trip extends Model
         'capacity',
         'min_age',
         'price',
+        'route_id',
     ];
 }

@@ -32,6 +32,7 @@ class CreateComplexTripRequest extends FormRequest
             'points.*.file_name' => 'required|string',
             'points.*.description' => 'required|string',
             'points.*.day_of_the_route' => 'required|integer',
+            'points.*.name' => 'required|string',
         ];
     }
 }
