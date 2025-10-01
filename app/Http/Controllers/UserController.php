@@ -99,7 +99,7 @@ class UserController extends Controller
     public function signin(SigninRequest $request): JsonResponse {
         $credentials = $request->validated();
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, true)) {
             $request->session()->regenerate();
 
             return response()->success([], "Logged in");

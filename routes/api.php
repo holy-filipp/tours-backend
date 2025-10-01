@@ -7,20 +7,21 @@ use App\Http\Controllers\PointController;
 use App\Http\Controllers\TripController;
 use Illuminate\Support\Facades\Route;
 
+// Авторизация
 Route::post('/user/signup', [UserController::class, 'signup']);
 Route::post('/user/signin', [UserController::class, 'signin'])->middleware('web');
 
 Route::middleware(['auth:sanctum', 'web'])->group(function() {
-    Route::get('/protected', function() {
-        return response()->success([], 'you are on protected endpoint', 200);
-    })->middleware('checkRole:user');
-    Route::get('/content/udmurtia', [PageController::class, 'GetUdmurtia']);
+    // Достопримечательности
     Route::post('/poi/create', [POIController::class, 'CreatePOI']);
     Route::get('/poi/list', [POIController::class, 'GetPOIs']);
-    Route::get('/trip/search', [TripController::class, 'FindTrips']);
 
+    // Контент по Удмуртии
+    Route::get('/content/udmurtia', [PageController::class, 'GetUdmurtia']);
+
+    // Экскурсии
+    Route::get('/trip/search', [TripController::class, 'FindTrips']);
     Route::post('/trip/image', [PointController::class, 'UploadImage'])->middleware('checkRole:admin');
     Route::post('/trip/complex', [TripController::class, 'ComplexCreateTrip'])->middleware('checkRole:admin');
     Route::get('/trip/list', [TripController::class, 'GetTrips'])->middleware('checkRole:admin');
 });
-
