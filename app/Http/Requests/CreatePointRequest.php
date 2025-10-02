@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreatePointRequest extends FormRequest
 {
@@ -28,5 +30,12 @@ class CreatePointRequest extends FormRequest
             'route_id' => 'required|exists:routes,id',
             'name' => 'required|string',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->error($validator->errors(), "Validation error", 422)
+        );
     }
 }

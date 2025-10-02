@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UploadPointImageRequest extends FormRequest
 {
@@ -24,5 +26,12 @@ class UploadPointImageRequest extends FormRequest
         return [
             'file' => 'required|file|mimes:png,jpg',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->error($validator->errors(), "Validation error", 422)
+        );
     }
 }

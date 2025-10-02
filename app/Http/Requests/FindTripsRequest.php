@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class FindTripsRequest extends FormRequest
 {
@@ -24,5 +26,12 @@ class FindTripsRequest extends FormRequest
         return [
             'search' => 'required|string',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->error($validator->errors(), "Validation error", 422)
+        );
     }
 }

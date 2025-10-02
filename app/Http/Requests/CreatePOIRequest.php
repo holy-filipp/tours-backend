@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreatePOIRequest extends FormRequest
 {
@@ -25,5 +27,12 @@ class CreatePOIRequest extends FormRequest
             'description' => 'required|string',
             'file' => 'required|file|mimes:png,jpg',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->error($validator->errors(), "Validation error", 422)
+        );
     }
 }

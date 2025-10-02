@@ -96,6 +96,49 @@ class UserController extends Controller
         return response()->success(User::create($data), "User created", 201);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/user/signin",
+     *     tags={"Пользователь"},
+     *     summary="Войти в аккаунт",
+     *     description="Проверяет credentials и создаёт новый токен в случае успеха",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             allOf={
+     *                 @OA\Schema(
+     *                     required={"email", "password"},
+     *                     @OA\Property(property="email", type="string", example="foo@bar.com"),
+     *                     @OA\Property(property="password", type="string", example="password")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Успешный вход",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="true"),
+     *             @OA\Property(property="message", type="string", example="Logged in"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(type="string"),
+     *                 example={}
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Неверные credentials",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="false"),
+     *             @OA\Property(property="message", type="string", example="Wrong credentials"),
+     *             @OA\Property(property="errors", type="array",
+     *                 @OA\Items(type="string"),
+     *                 example={}
+     *             ),
+     *         )
+     *     )
+     * )
+     */
     public function signin(SigninRequest $request): JsonResponse {
         $credentials = $request->validated();
 
