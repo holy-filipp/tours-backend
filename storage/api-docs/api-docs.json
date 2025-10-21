@@ -1225,7 +1225,7 @@
                 ],
                 "summary": "Зарегистрировать нового пользователя",
                 "description": "Создаёт и возвращает нового пользователя в случае успеха",
-                "operationId": "0e3c7d64c2fa728e7deb9063d9af33b3",
+                "operationId": "signup",
                 "requestBody": {
                     "content": {
                         "application/json": {

@@ -14,6 +14,7 @@ class UserController extends Controller
 {
     /**
      * @OA\Post(
+     *     operationId="signup",
      *     path="/api/user/signup",
      *     tags={"Пользователь"},
      *     summary="Зарегистрировать нового пользователя",
