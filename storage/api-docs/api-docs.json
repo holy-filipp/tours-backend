@@ -6,6 +6,30 @@
         "version": "0.0.1"
     },
     "paths": {
+        "/api/sanctum/csrf-cookie": {
+            "get": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Получить CSRF токен",
+                "description": "Генерирует и возвращает в XSRF-TOKEN cookie новый CSRF токен",
+                "operationId": "getCsrfCookie",
+                "responses": {
+                    "204": {
+                        "description": "Успешное создание",
+                        "headers": {
+                            "XSRF-TOKEN": {
+                                "description": "CSRF токен",
+                                "schema": {
+                                    "type": "string",
+                                    "example": "abcdefgiekqwe32"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/poi/create": {
             "post": {
                 "tags": [
@@ -1498,6 +1522,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Авторизация",
+            "description": "Авторизация"
+        },
         {
             "name": "Достопримечательности",
             "description": "Достопримечательности"
