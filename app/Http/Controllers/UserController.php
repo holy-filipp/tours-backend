@@ -6,6 +6,7 @@ use App\Http\Requests\SigninRequest;
 use App\Http\Requests\SignupRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use OpenApi\Annotations as OA;
@@ -89,7 +90,8 @@ class UserController extends Controller
      *     )
      * )
      */
-    public function signup(SignupRequest $request): JsonResponse {
+    public function signup(SignupRequest $request): JsonResponse
+    {
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
         $data['birthday'] = date($data['birthday']);
@@ -100,6 +102,7 @@ class UserController extends Controller
     /**
      * @OA\Post(
      *     path="/api/user/signin",
+     *     operationId="signin",
      *     tags={"Пользователь"},
      *     summary="Войти в аккаунт",
      *     description="Проверяет credentials и создаёт новый токен в случае успеха",
@@ -140,7 +143,8 @@ class UserController extends Controller
      *     )
      * )
      */
-    public function signin(SigninRequest $request): JsonResponse {
+    public function signin(SigninRequest $request): JsonResponse
+    {
         $credentials = $request->validated();
 
         if (Auth::attempt($credentials, true)) {
@@ -150,5 +154,51 @@ class UserController extends Controller
         }
 
         return response()->error([], "Wrong credentials", 401);
+    }
+
+    /**
+     * @OA\Get(
+     *     operationId="getUser",
+     *     path="/api/user/me",
+     *     tags={"Пользователь"},
+     *     summary="Получить пользователя по сессии",
+     *     description="Возвращает пользователя из сессии если это возможно",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Успешный вывод пользователя",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="true"),
+     *             @OA\Property(property="message", type="string", example="Session active"),
+     *             @OA\Property(property="data", type="object",
+     *                 required={"first_name", "last_name", "birthday", "email", "role"},
+     *                 @OA\Property(property="first_name", type="string", example="Иван"),
+     *                 @OA\Property(property="last_name", type="string", example="Иванов"),
+     *                 @OA\Property(property="patronymic", type="string", example="Иванович"),
+     *                 @OA\Property(property="birthday", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                 @OA\Property(property="email", type="string", example="foo@bar.com"),
+     *                 @OA\Property(property="role", type="string", example="user"),
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Пользователь не авторизирован",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *         )
+     *     )
+     * )
+     */
+    public function me(Request $request): JsonResponse {
+        $user = $request->user();
+
+        return response()->success([
+            "first_name" => $user->first_name,
+            "last_name" => $user->last_name,
+            "patronymic" => $user->patronymic,
+            "birthday" => $user->birthday,
+            "email" => $user->email,
+            "role" => $user->role,
+        ], "Session active", 200);
     }
 }

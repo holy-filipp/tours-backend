@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Route;
 
 // Авторизация
 Route::post('/user/signup', [UserController::class, 'signup']);
-Route::post('/user/signin', [UserController::class, 'signin'])->middleware('web');
+Route::post('/user/signin', [UserController::class, 'signin']);
 
-Route::middleware(['auth:sanctum', 'web'])->group(function() {
+Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/user/me', [UserController::class, 'me']);
+
     // Достопримечательности
     Route::post('/poi/create', [POIController::class, 'CreatePOI']);
     Route::get('/poi/list', [POIController::class, 'GetPOIs']);
