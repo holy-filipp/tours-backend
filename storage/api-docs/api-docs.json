@@ -268,7 +268,7 @@
                 ],
                 "summary": "Контент по Удмуртии",
                 "description": "Возвращает статический контент в формате markdown для страницы",
-                "operationId": "910572190b5a8e97c01de37e7f49653d",
+                "operationId": "getUdmurtiaPage",
                 "responses": {
                     "200": {
                         "description": "Успешный вывод контента",

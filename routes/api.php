@@ -11,15 +11,15 @@ use Illuminate\Support\Facades\Route;
 Route::post('/user/signup', [UserController::class, 'signup']);
 Route::post('/user/signin', [UserController::class, 'signin']);
 
+// Контент по Удмуртии
+Route::get('/content/udmurtia', [PageController::class, 'GetUdmurtia']);
+
 Route::middleware('auth:sanctum')->group(function() {
     Route::get('/user/me', [UserController::class, 'me']);
 
     // Достопримечательности
     Route::post('/poi/create', [POIController::class, 'CreatePOI']);
     Route::get('/poi/list', [POIController::class, 'GetPOIs']);
-
-    // Контент по Удмуртии
-    Route::get('/content/udmurtia', [PageController::class, 'GetUdmurtia']);
 
     // Экскурсии
     Route::get('/trip/search', [TripController::class, 'FindTrips']);

@@ -10,6 +10,7 @@ class PageController extends Controller
 {
     /**
      * @OA\Get(
+     *     operationId="getUdmurtiaPage",
      *     path="/api/content/udmurtia",
      *     tags={"Контент"},
      *     summary="Контент по Удмуртии",
