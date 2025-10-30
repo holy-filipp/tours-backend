@@ -259,49 +259,14 @@ class TripController extends Controller
      *             @OA\Property(property="message", type="string", example="Fetched trips"),
      *             @OA\Property(property="data", type="array",
      *                 @OA\Items(type="object",
-     *                     @OA\Property(property="route", type="object",
-     *                         @OA\Property(property="start_location", type="string", example="Ижевск"),
-     *                         @OA\Property(property="duration", type="number", example=10),
-     *                         @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                         @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                         @OA\Property(property="id", type="number", example=1),
-     *                     ),
-     *                     @OA\Property(property="trip", type="object",
-     *                          @OA\Property(property="starts_at", type="string", example="2000-01-01 08:00"),
-     *                          @OA\Property(property="capacity", type="number", example=5),
-     *                          @OA\Property(property="min_age", type="number", example=16),
-     *                          @OA\Property(property="price", type="number", example=9999),
-     *                          @OA\Property(property="route_id", type="number", example=1),
-     *                          @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                          @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                          @OA\Property(property="id", type="number", example=1),
-     *                     ),
-     *                     @OA\Property(property="points", type="array",
-     *                         @OA\Items(
-     *                             type="object",
-     *                             required={"file_name", "description", "day_of_the_route", "name"},
-     *                             @OA\Property(property="file_name", type="string", example="points/pCobXrHQoHbiI2JDiWMJj8zVKLEu26qFIMogpwcD.jpg"),
-     *                             @OA\Property(property="description", type="string", example="Описание точки"),
-     *                             @OA\Property(property="day_of_the_route", type="number", example=1),
-     *                             @OA\Property(property="name", type="string", example="Название точки"),
-     *                             @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                             @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                             @OA\Property(property="pivot", type="object",
-     *                                 @OA\Property(property="route_id", type="number", example=2),
-     *                                 @OA\Property(property="point_id", type="number", example=2),
-     *                                 @OA\Property(property="day_of_the_route", type="number", example=1)
-     *                             )
-     *                         )
-     *                     )
+     *                     required={"id", "duration", "price", "start_location", "archived"},
+     *                     @OA\Property(property="id", type="number", example=1),
+     *                     @OA\Property(property="duration", type="number", example=10),
+     *                     @OA\Property(property="price", type="number", example=9999),
+     *                     @OA\Property(property="start_location", type="string", example="Ижевск"),
+     *                     @OA\Property(property="archived", type="boolean", example="true")
      *                 )
      *             ),
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Пользователь не авторизирован",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated."),
      *         )
      *     )
      * )
@@ -314,9 +279,11 @@ class TripController extends Controller
         foreach($trips as $trip) {
             $route = Route::find($trip->route_id);
             $output[] = [
-                'trip' => $trip,
-                'route' => $route,
-                'points' => $route->points()->get()
+                'id' => $trip->id,
+                'duration' => $route->duration,
+                'price' => $trip->price,
+                'start_location' => $route->start_location,
+                'archived' => $trip->archived
             ];
         }
 
@@ -346,40 +313,12 @@ class TripController extends Controller
      *             @OA\Property(property="message", type="string", example="Search results"),
      *             @OA\Property(property="data", type="array",
      *                 @OA\Items(type="object",
-     *                     @OA\Property(property="route", type="object",
-     *                         @OA\Property(property="start_location", type="string", example="Ижевск"),
-     *                         @OA\Property(property="duration", type="number", example=10),
-     *                         @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                         @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                         @OA\Property(property="id", type="number", example=1),
-     *                     ),
-     *                     @OA\Property(property="trip", type="object",
-     *                          @OA\Property(property="starts_at", type="string", example="2000-01-01 08:00"),
-     *                          @OA\Property(property="capacity", type="number", example=5),
-     *                          @OA\Property(property="min_age", type="number", example=16),
-     *                          @OA\Property(property="price", type="number", example=9999),
-     *                          @OA\Property(property="route_id", type="number", example=1),
-     *                          @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                          @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                          @OA\Property(property="id", type="number", example=1),
-     *                     ),
-     *                     @OA\Property(property="points", type="array",
-     *                         @OA\Items(
-     *                             type="object",
-     *                             required={"file_name", "description", "day_of_the_route", "name"},
-     *                             @OA\Property(property="file_name", type="string", example="points/pCobXrHQoHbiI2JDiWMJj8zVKLEu26qFIMogpwcD.jpg"),
-     *                             @OA\Property(property="description", type="string", example="Описание точки"),
-     *                             @OA\Property(property="day_of_the_route", type="number", example=1),
-     *                             @OA\Property(property="name", type="string", example="Название точки"),
-     *                             @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                             @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
-     *                             @OA\Property(property="pivot", type="object",
-     *                                 @OA\Property(property="route_id", type="number", example=2),
-     *                                 @OA\Property(property="point_id", type="number", example=2),
-     *                                 @OA\Property(property="day_of_the_route", type="number", example=1)
-     *                             )
-     *                         )
-     *                     )
+     *                     required={"id", "duration", "price", "start_location", "archived"},
+     *                     @OA\Property(property="id", type="number", example=1),
+     *                     @OA\Property(property="duration", type="number", example=10),
+     *                     @OA\Property(property="price", type="number", example=9999),
+     *                     @OA\Property(property="start_location", type="string", example="Ижевск"),
+     *                     @OA\Property(property="archived", type="boolean", example="true")
      *                 )
      *             ),
      *         )
@@ -398,13 +337,6 @@ class TripController extends Controller
      *                 ),
      *             ),
      *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Пользователь не авторизирован",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated."),
-     *         )
      *     )
      * )
      */
@@ -421,9 +353,11 @@ class TripController extends Controller
             $trip = Trip::where('route_id', $route->id)->first();
 
             $results[$trip->id] = [
-                'trip' => $trip,
-                'route' => $route,
-                'points' => $route->points()->get()
+                'id' => $trip->id,
+                'duration' => $route->duration,
+                'price' => $trip->price,
+                'start_location' => $route->start_location,
+                'archived' => $trip->archived
             ];
         }
 
@@ -432,9 +366,11 @@ class TripController extends Controller
                 $trip = Trip::where('route_id', $route->id)->first();
 
                 $results[$trip->id] = [
-                    'trip' => $trip,
-                    'route' => $route,
-                    'points' => $route->points()->get()
+                    'id' => $trip->id,
+                    'duration' => $route->duration,
+                    'price' => $trip->price,
+                    'start_location' => $route->start_location,
+                    'archived' => $trip->archived
                 ];
             }
         }
@@ -444,9 +380,11 @@ class TripController extends Controller
                 $trip = Trip::where('route_id', $route->id)->first();
 
                 $results[$trip->id] = [
-                    'trip' => $trip,
-                    'route' => $route,
-                    'points' => $route->points()->get()
+                    'id' => $trip->id,
+                    'duration' => $route->duration,
+                    'price' => $trip->price,
+                    'start_location' => $route->start_location,
+                    'archived' => $trip->archived
                 ];
             }
         }

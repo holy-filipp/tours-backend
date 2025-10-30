@@ -877,143 +877,37 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
+                                                "required": [
+                                                    "id",
+                                                    "duration",
+                                                    "price",
+                                                    "start_location",
+                                                    "archived"
+                                                ],
                                                 "properties": {
-                                                    "route": {
-                                                        "properties": {
-                                                            "start_location": {
-                                                                "type": "string",
-                                                                "example": "Ижевск"
-                                                            },
-                                                            "duration": {
-                                                                "type": "number",
-                                                                "example": 10
-                                                            },
-                                                            "updated_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "created_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "id": {
-                                                                "type": "number",
-                                                                "example": 1
-                                                            }
-                                                        },
-                                                        "type": "object"
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 1
                                                     },
-                                                    "trip": {
-                                                        "properties": {
-                                                            "starts_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01 08:00"
-                                                            },
-                                                            "capacity": {
-                                                                "type": "number",
-                                                                "example": 5
-                                                            },
-                                                            "min_age": {
-                                                                "type": "number",
-                                                                "example": 16
-                                                            },
-                                                            "price": {
-                                                                "type": "number",
-                                                                "example": 9999
-                                                            },
-                                                            "route_id": {
-                                                                "type": "number",
-                                                                "example": 1
-                                                            },
-                                                            "updated_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "created_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "id": {
-                                                                "type": "number",
-                                                                "example": 1
-                                                            }
-                                                        },
-                                                        "type": "object"
+                                                    "duration": {
+                                                        "type": "number",
+                                                        "example": 10
                                                     },
-                                                    "points": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "required": [
-                                                                "file_name",
-                                                                "description",
-                                                                "day_of_the_route",
-                                                                "name"
-                                                            ],
-                                                            "properties": {
-                                                                "file_name": {
-                                                                    "type": "string",
-                                                                    "example": "points/pCobXrHQoHbiI2JDiWMJj8zVKLEu26qFIMogpwcD.jpg"
-                                                                },
-                                                                "description": {
-                                                                    "type": "string",
-                                                                    "example": "Описание точки"
-                                                                },
-                                                                "day_of_the_route": {
-                                                                    "type": "number",
-                                                                    "example": 1
-                                                                },
-                                                                "name": {
-                                                                    "type": "string",
-                                                                    "example": "Название точки"
-                                                                },
-                                                                "updated_at": {
-                                                                    "type": "string",
-                                                                    "example": "2000-01-01T00:00:00.000000Z"
-                                                                },
-                                                                "created_at": {
-                                                                    "type": "string",
-                                                                    "example": "2000-01-01T00:00:00.000000Z"
-                                                                },
-                                                                "pivot": {
-                                                                    "properties": {
-                                                                        "route_id": {
-                                                                            "type": "number",
-                                                                            "example": 2
-                                                                        },
-                                                                        "point_id": {
-                                                                            "type": "number",
-                                                                            "example": 2
-                                                                        },
-                                                                        "day_of_the_route": {
-                                                                            "type": "number",
-                                                                            "example": 1
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                }
-                                                            },
-                                                            "type": "object"
-                                                        }
+                                                    "price": {
+                                                        "type": "number",
+                                                        "example": 9999
+                                                    },
+                                                    "start_location": {
+                                                        "type": "string",
+                                                        "example": "Ижевск"
+                                                    },
+                                                    "archived": {
+                                                        "type": "boolean",
+                                                        "example": "true"
                                                     }
                                                 },
                                                 "type": "object"
                                             }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Пользователь не авторизирован",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -1061,123 +955,33 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
+                                                "required": [
+                                                    "id",
+                                                    "duration",
+                                                    "price",
+                                                    "start_location",
+                                                    "archived"
+                                                ],
                                                 "properties": {
-                                                    "route": {
-                                                        "properties": {
-                                                            "start_location": {
-                                                                "type": "string",
-                                                                "example": "Ижевск"
-                                                            },
-                                                            "duration": {
-                                                                "type": "number",
-                                                                "example": 10
-                                                            },
-                                                            "updated_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "created_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "id": {
-                                                                "type": "number",
-                                                                "example": 1
-                                                            }
-                                                        },
-                                                        "type": "object"
+                                                    "id": {
+                                                        "type": "number",
+                                                        "example": 1
                                                     },
-                                                    "trip": {
-                                                        "properties": {
-                                                            "starts_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01 08:00"
-                                                            },
-                                                            "capacity": {
-                                                                "type": "number",
-                                                                "example": 5
-                                                            },
-                                                            "min_age": {
-                                                                "type": "number",
-                                                                "example": 16
-                                                            },
-                                                            "price": {
-                                                                "type": "number",
-                                                                "example": 9999
-                                                            },
-                                                            "route_id": {
-                                                                "type": "number",
-                                                                "example": 1
-                                                            },
-                                                            "updated_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "created_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "id": {
-                                                                "type": "number",
-                                                                "example": 1
-                                                            }
-                                                        },
-                                                        "type": "object"
+                                                    "duration": {
+                                                        "type": "number",
+                                                        "example": 10
                                                     },
-                                                    "points": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "required": [
-                                                                "file_name",
-                                                                "description",
-                                                                "day_of_the_route",
-                                                                "name"
-                                                            ],
-                                                            "properties": {
-                                                                "file_name": {
-                                                                    "type": "string",
-                                                                    "example": "points/pCobXrHQoHbiI2JDiWMJj8zVKLEu26qFIMogpwcD.jpg"
-                                                                },
-                                                                "description": {
-                                                                    "type": "string",
-                                                                    "example": "Описание точки"
-                                                                },
-                                                                "day_of_the_route": {
-                                                                    "type": "number",
-                                                                    "example": 1
-                                                                },
-                                                                "name": {
-                                                                    "type": "string",
-                                                                    "example": "Название точки"
-                                                                },
-                                                                "updated_at": {
-                                                                    "type": "string",
-                                                                    "example": "2000-01-01T00:00:00.000000Z"
-                                                                },
-                                                                "created_at": {
-                                                                    "type": "string",
-                                                                    "example": "2000-01-01T00:00:00.000000Z"
-                                                                },
-                                                                "pivot": {
-                                                                    "properties": {
-                                                                        "route_id": {
-                                                                            "type": "number",
-                                                                            "example": 2
-                                                                        },
-                                                                        "point_id": {
-                                                                            "type": "number",
-                                                                            "example": 2
-                                                                        },
-                                                                        "day_of_the_route": {
-                                                                            "type": "number",
-                                                                            "example": 1
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                }
-                                                            },
-                                                            "type": "object"
-                                                        }
+                                                    "price": {
+                                                        "type": "number",
+                                                        "example": 9999
+                                                    },
+                                                    "start_location": {
+                                                        "type": "string",
+                                                        "example": "Ижевск"
+                                                    },
+                                                    "archived": {
+                                                        "type": "boolean",
+                                                        "example": "true"
                                                     }
                                                 },
                                                 "type": "object"
@@ -1216,22 +1020,6 @@
                                                 }
                                             },
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Пользователь не авторизирован",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"

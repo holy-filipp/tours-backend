@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('min_age');
             $table->integer('price');
             $table->foreignId('route_id')->constrained('routes')->onDelete('cascade');
+            $table->boolean('archived')->default(false);
         });
     }
 
