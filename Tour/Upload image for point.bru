@@ -1,0 +1,23 @@
+meta {
+  name: Upload image for point
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{BASE_URL}}/api/trip/image
+  body: multipartForm
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+body:multipart-form {
+  file: @file(/Users/filipp/Downloads/golden-gate-bridge-detailpage-hero.png)
+}
+
+settings {
+  encodeUrl: true
+}

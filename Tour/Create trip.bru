@@ -1,0 +1,29 @@
+meta {
+  name: Create trip
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{BASE_URL}}/api/trip
+  body: json
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+body:json {
+  {
+      "starts_at": "2006-07-21 12:00",
+      "capacity": 10,
+      "min_age": 18,
+      "price": 1488,
+      "route_id": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateComplexTripRequest;
 use App\Http\Requests\CreateTripRequest;
 use App\Http\Requests\FindTripsRequest;
+use App\Http\Requests\PatchTripRequest;
 use App\Models\Point;
 use App\Models\Route;
 use App\Models\Trip;
@@ -12,15 +13,197 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use OpenApi\Annotations as OA;
-use Symfony\Component\Console\Output\ConsoleOutput;
 
 class TripController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/trip",
+     *     tags={"Экскурсии"},
+     *     summary="Создать экскурсию",
+     *     description="Создаёт и возвращает новую экскурсию",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             allOf={
+     *                 @OA\Schema(
+     *                     required={"starts_at", "capacity", "min_age", "price", "route_id"},
+     *                     @OA\Property(property="starts_at", type="string", example="2000-01-01 08:00"),
+     *                     @OA\Property(property="capacity", type="number", example=5),
+     *                     @OA\Property(property="min_age", type="number", example=16),
+     *                     @OA\Property(property="price", type="number", example=9999),
+     *                     @OA\Property(property="route_id", type="number", example=1)
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Успешное создание",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="true"),
+     *             @OA\Property(property="message", type="string", example="Trip created"),
+     *             @OA\Property(property="data", type="object",
+     *                 required={"id", "starts_at", "capacity", "min_age", "price", "route_id", "created_at", "updated_at"},
+     *                 @OA\Property(property="id", type="number", example=1),
+     *                 @OA\Property(property="starts_at", type="string", example="2000-01-01 08:00"),
+     *                 @OA\Property(property="capacity", type="number", example=5),
+     *                 @OA\Property(property="min_age", type="number", example=16),
+     *                 @OA\Property(property="price", type="number", example=9999),
+     *                 @OA\Property(property="route_id", type="number", example=1),
+     *                 @OA\Property(property="created_at", type="string", example="2000-01-01T12:00:00.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", example="2000-01-01T12:00:00.000000Z")
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Ошибка валидации данных",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="false"),
+     *             @OA\Property(property="message", type="string", example="Validation error"),
+     *             @OA\Property(property="errors", type="object",
+     *                 @OA\Property(property="starts_at", type="array", example={"The starts at field is required."},
+     *                     @OA\Items(
+     *                         type="string"
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="capacity", type="array", example={"The capacity field is required."},
+     *                     @OA\Items(
+     *                         type="string"
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="min_age", type="array", example={"The min age field is required."},
+     *                     @OA\Items(
+     *                         type="string"
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="price", type="array", example={"The price field is required."},
+     *                     @OA\Items(
+     *                         type="string"
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="route_id", type="array", example={"The route id field is required."},
+     *                     @OA\Items(
+     *                         type="string"
+     *                     )
+     *                 ),
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Роли пользователя не достаточно для выполнения операции",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="The role does not match the requirements"),
+     *             @OA\Property(property="errors", type="array",
+     *                 @OA\Items(
+     *                     type="string"
+     *                 ),
+     *                 example={}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Пользователь не авторизирован",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated."),
+     *         )
+     *     )
+     * )
+     */
     public function CreateTrip(CreateTripRequest $request): JsonResponse
     {
         $trip = Trip::create($request->validated());
 
         return response()->success($trip, 'Trip created', 201);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/api/trip/{id}",
+     *     tags={"Экскурсии"},
+     *     summary="Изменить экскурсию",
+     *     description="Запрос для изменения экскурсии по ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         description="ID экскурсии",
+     *         required=true,
+     *         in="path",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Экскурсия, маршрут и точки",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="true"),
+     *             @OA\Property(property="message", type="string", example="Trip found"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="route", type="object",
+     *                         @OA\Property(property="start_location", type="string", example="Ижевск"),
+     *                         @OA\Property(property="duration", type="number", example=10),
+     *                         @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                         @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                         @OA\Property(property="id", type="number", example=1),
+     *                     ),
+     *                     @OA\Property(property="trip", type="object",
+     *                          @OA\Property(property="starts_at", type="string", example="2000-01-01 08:00"),
+     *                          @OA\Property(property="capacity", type="number", example=5),
+     *                          @OA\Property(property="min_age", type="number", example=16),
+     *                          @OA\Property(property="price", type="number", example=9999),
+     *                          @OA\Property(property="route_id", type="number", example=1),
+     *                          @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                          @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                          @OA\Property(property="id", type="number", example=1),
+     *                     ),
+     *                     @OA\Property(property="points", type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             required={"file_name", "description", "day_of_the_route", "name"},
+     *                             @OA\Property(property="file_name", type="string", example="points/pCobXrHQoHbiI2JDiWMJj8zVKLEu26qFIMogpwcD.jpg"),
+     *                             @OA\Property(property="description", type="string", example="Описание точки"),
+     *                             @OA\Property(property="day_of_the_route", type="number", example=1),
+     *                             @OA\Property(property="name", type="string", example="Название точки"),
+     *                             @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                             @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                             @OA\Property(property="pivot", type="object",
+     *                                 @OA\Property(property="route_id", type="number", example=2),
+     *                                 @OA\Property(property="point_id", type="number", example=2),
+     *                                 @OA\Property(property="day_of_the_route", type="number", example=1)
+     *                             )
+     *                         )
+     *                     )
+     *                 )
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Экскурсия не найдена",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Trip not found"),
+     *         )
+     *     )
+     * )
+     */
+    public function EditTrip(int $tripId, PatchTripRequest $request): JsonResponse
+    {
+        $trip = Trip::find($tripId);
+
+        if (!$trip) {
+            return response()->error([], 'Trip not found', 404);
+        }
+
+        if ($trip->update($request->validated())) {
+            return response()->success(Trip::find($tripId), "Trip updated");
+        }
+
+        return response()->error([], 'Failed to update trip', 500);
     }
 
     /**
@@ -390,5 +573,94 @@ class TripController extends Controller
         }
 
         return response()->success(array_values($results), 'Search results');
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/trip/{id}",
+     *     tags={"Экскурсии"},
+     *     summary="Получить экскурсию",
+     *     description="Запрос для получения экскурсии и её связей по ID",
+     *     @OA\Parameter(
+     *         name="id",
+     *         description="ID экскурсии",
+     *         required=true,
+     *         in="path",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Экскурсия, маршрут и точки",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="true"),
+     *             @OA\Property(property="message", type="string", example="Trip found"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="route", type="object",
+     *                         @OA\Property(property="start_location", type="string", example="Ижевск"),
+     *                         @OA\Property(property="duration", type="number", example=10),
+     *                         @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                         @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                         @OA\Property(property="id", type="number", example=1),
+     *                     ),
+     *                     @OA\Property(property="trip", type="object",
+     *                          @OA\Property(property="starts_at", type="string", example="2000-01-01 08:00"),
+     *                          @OA\Property(property="capacity", type="number", example=5),
+     *                          @OA\Property(property="min_age", type="number", example=16),
+     *                          @OA\Property(property="price", type="number", example=9999),
+     *                          @OA\Property(property="route_id", type="number", example=1),
+     *                          @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                          @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                          @OA\Property(property="id", type="number", example=1),
+     *                     ),
+     *                     @OA\Property(property="points", type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             required={"file_name", "description", "day_of_the_route", "name"},
+     *                             @OA\Property(property="file_name", type="string", example="points/pCobXrHQoHbiI2JDiWMJj8zVKLEu26qFIMogpwcD.jpg"),
+     *                             @OA\Property(property="description", type="string", example="Описание точки"),
+     *                             @OA\Property(property="day_of_the_route", type="number", example=1),
+     *                             @OA\Property(property="name", type="string", example="Название точки"),
+     *                             @OA\Property(property="updated_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                             @OA\Property(property="created_at", type="string", example="2000-01-01T00:00:00.000000Z"),
+     *                             @OA\Property(property="pivot", type="object",
+     *                                 @OA\Property(property="route_id", type="number", example=2),
+     *                                 @OA\Property(property="point_id", type="number", example=2),
+     *                                 @OA\Property(property="day_of_the_route", type="number", example=1)
+     *                             )
+     *                         )
+     *                     )
+     *                 )
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Экскурсия не найдена",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Trip not found"),
+     *         )
+     *     )
+     * )
+     */
+    public function GetTrip(int $tripId)
+    {
+        $trip = Trip::find($tripId);
+
+        if (!$trip) {
+            return response()->error([], 'Trip not found', 404);
+        }
+
+        $route = Route::find($trip->route_id);
+        $points = $route->points()->get();
+
+        return response()->success([
+            'trip' => $trip,
+            'route' => $route,
+            'points' => $points,
+        ], "Trip found");
     }
 }

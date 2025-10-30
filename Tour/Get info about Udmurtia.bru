@@ -1,0 +1,19 @@
+meta {
+  name: Get info about Udmurtia
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{BASE_URL}}/api/content/udmurtia
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+settings {
+  encodeUrl: true
+}

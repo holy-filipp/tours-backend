@@ -1,0 +1,26 @@
+meta {
+  name: Signin
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/api/user/signin
+  body: json
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+body:json {
+  {
+      "email": "im1@filipp.su",
+      "password": "qwerasd1!"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Search among trips, routes and points
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{BASE_URL}}/api/trip/search?search=лес
+  body: text
+  auth: inherit
+}
+
+params:query {
+  search: лес
+}
+
+headers {
+  Accept: application/json
+}
+
+settings {
+  encodeUrl: true
+}

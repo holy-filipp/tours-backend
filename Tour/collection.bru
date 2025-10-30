@@ -1,0 +1,16 @@
+meta {
+  name: Tour
+}
+
+auth {
+  mode: none
+}
+
+vars:pre-request {
+  BASE_URL: http://127.0.0.1:8000
+  XSRF-TOKEN: 
+}
+
+script:pre-request {
+  req.setHeader("X-XSRF-TOKEN", bru.getVar("XSRF-TOKEN"))
+}

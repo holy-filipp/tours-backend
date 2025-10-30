@@ -1,0 +1,24 @@
+meta {
+  name: Create POI
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{BASE_URL}}/api/poi/create
+  body: multipartForm
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+body:multipart-form {
+  description: Залупа какая то
+  file: @file(/C:/Users/filipp/Downloads/3F3F3F.png)
+}
+
+settings {
+  encodeUrl: true
+}

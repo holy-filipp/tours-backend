@@ -1,0 +1,19 @@
+meta {
+  name: Get trips
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{BASE_URL}}/api/trip/list
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+settings {
+  encodeUrl: true
+}

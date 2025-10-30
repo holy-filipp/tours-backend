@@ -1,0 +1,27 @@
+meta {
+  name: Edit trip
+  type: http
+  seq: 14
+}
+
+patch {
+  url: {{BASE_URL}}/api/trip/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "starts_at": "2228-07-21 12:00",
+      "capacity": 10,
+      "min_age": 18,
+      "price": 1488,
+      "route_id": 1,
+      "archived": true
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

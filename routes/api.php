@@ -17,6 +17,7 @@ Route::get('/content/udmurtia', [PageController::class, 'GetUdmurtia']);
 // Экскурсии
 Route::get('/trip/search', [TripController::class, 'FindTrips']);
 Route::get('/trip/list', [TripController::class, 'GetTrips']);
+Route::get('/trip/{id}', [TripController::class, 'GetTrip']);
 
 Route::middleware('auth:sanctum')->group(function() {
     // Пользователь
@@ -29,4 +30,6 @@ Route::middleware('auth:sanctum')->group(function() {
     // Экскурсии
     Route::post('/trip/image', [PointController::class, 'UploadImage'])->middleware('checkRole:admin');
     Route::post('/trip/complex', [TripController::class, 'ComplexCreateTrip'])->middleware('checkRole:admin');
+    Route::post('/trip', [TripController::class, 'CreateTrip'])->middleware('checkRole:admin');
+    Route::patch('/trip/{id}', [TripController::class, 'EditTrip'])->middleware('checkRole:admin');
 });

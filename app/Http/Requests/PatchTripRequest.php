@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CreateTripRequest extends FormRequest
+class PatchTripRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,14 +26,8 @@ class CreateTripRequest extends FormRequest
             'capacity' => 'required|integer',
             'min_age' => 'required|integer',
             'price' => 'required|integer',
-            'route_id' => 'required|integer|exists:routes,id'
+            'route_id' => 'required|integer|exists:routes,id',
+            'archived' => 'boolean'
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->error($validator->errors(), "Validation error", 422)
-        );
     }
 }
