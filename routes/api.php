@@ -19,13 +19,15 @@ Route::get('/trip/search', [TripController::class, 'FindTrips']);
 Route::get('/trip/list', [TripController::class, 'GetTrips']);
 Route::get('/trip/{id}', [TripController::class, 'GetTrip']);
 
+// Достопримечательности
+Route::get('/poi/list', [POIController::class, 'GetPOIs']);
+
 Route::middleware('auth:sanctum')->group(function() {
     // Пользователь
     Route::get('/user/me', [UserController::class, 'me']);
 
     // Достопримечательности
     Route::post('/poi/create', [POIController::class, 'CreatePOI']);
-    Route::get('/poi/list', [POIController::class, 'GetPOIs']);
 
     // Экскурсии
     Route::post('/trip/image', [PointController::class, 'UploadImage'])->middleware('checkRole:admin');

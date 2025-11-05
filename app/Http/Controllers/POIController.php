@@ -11,6 +11,7 @@ class POIController extends Controller
 {
     /**
      * @OA\Post(
+     *     operationId="createPoi",
      *     path="/api/poi/create",
      *     tags={"Достопримечательности"},
      *     summary="Создать новую достопримечательность",
@@ -24,7 +25,8 @@ class POIController extends Controller
      *                 required={"description", "file"},
      *                 @OA\Property(
      *                     property="file",
-     *                     type="string"
+     *                     type="string",
+     *                     format="binary",
      *                 ),
      *                 @OA\Property(
      *                     property="description",
@@ -70,13 +72,6 @@ class POIController extends Controller
      *                 ),
      *             ),
      *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Пользователь не авторизирован",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated."),
-     *         )
      *     )
      * )
      */
@@ -95,6 +90,7 @@ class POIController extends Controller
 
     /**
      * @OA\Get(
+     *     operationId="getPois",
      *     path="/api/poi/list",
      *     tags={"Достопримечательности"},
      *     summary="Получить список достопримечательностей",
@@ -117,13 +113,6 @@ class POIController extends Controller
      *                     @OA\Property(property="id", type="number", example=1),
      *                 ),
      *             ),
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Пользователь не авторизирован",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Unauthenticated."),
      *         )
      *     )
      * )

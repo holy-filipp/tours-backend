@@ -37,7 +37,7 @@
                 ],
                 "summary": "Создать новую достопримечательность",
                 "description": "Создаёт и возвращает новую достопримечательность в случае успеха",
-                "operationId": "b3a9db44be281c210db1dc5686205879",
+                "operationId": "createPoi",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -49,7 +49,8 @@
                                 ],
                                 "properties": {
                                     "file": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "binary"
                                     },
                                     "description": {
                                         "type": "string",
@@ -157,22 +158,6 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Пользователь не авторизирован",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -184,7 +169,7 @@
                 ],
                 "summary": "Получить список достопримечательностей",
                 "description": "Возвращает список всех достопримечательностей",
-                "operationId": "7379957e55709238e32fe7d749b26e30",
+                "operationId": "getPois",
                 "responses": {
                     "200": {
                         "description": "Успешный вывод достопримечательностей",
@@ -235,22 +220,6 @@
                                                 },
                                                 "type": "object"
                                             }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Пользователь не авторизирован",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -477,7 +446,7 @@
                 ],
                 "summary": "Создать экскурсию",
                 "description": "Создаёт и возвращает новую экскурсию",
-                "operationId": "b8f14381f804d7db54b378061759135a",
+                "operationId": "createTrip",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -704,6 +673,468 @@
                 }
             }
         },
+        "/api/trip/{id}": {
+            "get": {
+                "tags": [
+                    "Экскурсии"
+                ],
+                "summary": "Получить экскурсию",
+                "description": "Запрос для получения экскурсии и её связей по ID",
+                "operationId": "getTripById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID экскурсии",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Экскурсия, маршрут и точки",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trip found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "route": {
+                                                        "properties": {
+                                                            "start_location": {
+                                                                "type": "string",
+                                                                "example": "Ижевск"
+                                                            },
+                                                            "duration": {
+                                                                "type": "number",
+                                                                "example": 10
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "example": "2000-01-01T00:00:00.000000Z"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2000-01-01T00:00:00.000000Z"
+                                                            },
+                                                            "id": {
+                                                                "type": "number",
+                                                                "example": 1
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "trip": {
+                                                        "properties": {
+                                                            "starts_at": {
+                                                                "type": "string",
+                                                                "example": "2000-01-01 08:00"
+                                                            },
+                                                            "capacity": {
+                                                                "type": "number",
+                                                                "example": 5
+                                                            },
+                                                            "min_age": {
+                                                                "type": "number",
+                                                                "example": 16
+                                                            },
+                                                            "price": {
+                                                                "type": "number",
+                                                                "example": 9999
+                                                            },
+                                                            "route_id": {
+                                                                "type": "number",
+                                                                "example": 1
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "example": "2000-01-01T00:00:00.000000Z"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2000-01-01T00:00:00.000000Z"
+                                                            },
+                                                            "id": {
+                                                                "type": "number",
+                                                                "example": 1
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "points": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "required": [
+                                                                "file_name",
+                                                                "description",
+                                                                "day_of_the_route",
+                                                                "name"
+                                                            ],
+                                                            "properties": {
+                                                                "file_name": {
+                                                                    "type": "string",
+                                                                    "example": "points/pCobXrHQoHbiI2JDiWMJj8zVKLEu26qFIMogpwcD.jpg"
+                                                                },
+                                                                "description": {
+                                                                    "type": "string",
+                                                                    "example": "Описание точки"
+                                                                },
+                                                                "day_of_the_route": {
+                                                                    "type": "number",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "Название точки"
+                                                                },
+                                                                "updated_at": {
+                                                                    "type": "string",
+                                                                    "example": "2000-01-01T00:00:00.000000Z"
+                                                                },
+                                                                "created_at": {
+                                                                    "type": "string",
+                                                                    "example": "2000-01-01T00:00:00.000000Z"
+                                                                },
+                                                                "pivot": {
+                                                                    "properties": {
+                                                                        "route_id": {
+                                                                            "type": "number",
+                                                                            "example": 2
+                                                                        },
+                                                                        "point_id": {
+                                                                            "type": "number",
+                                                                            "example": 2
+                                                                        },
+                                                                        "day_of_the_route": {
+                                                                            "type": "number",
+                                                                            "example": 1
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Экскурсия не найдена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trip not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Экскурсии"
+                ],
+                "summary": "Изменить экскурсию",
+                "description": "Запрос для изменения экскурсии по ID",
+                "operationId": "editTrip",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID экскурсии",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "properties": {
+                                            "starts_at": {
+                                                "type": "string",
+                                                "example": "2000-01-01 08:00"
+                                            },
+                                            "capacity": {
+                                                "type": "number",
+                                                "example": 5
+                                            },
+                                            "min_age": {
+                                                "type": "number",
+                                                "example": 16
+                                            },
+                                            "price": {
+                                                "type": "number",
+                                                "example": 9999
+                                            },
+                                            "route_id": {
+                                                "type": "number",
+                                                "example": 1
+                                            },
+                                            "archived": {
+                                                "type": "boolean",
+                                                "example": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешное обновление",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trip updated"
+                                        },
+                                        "data": {
+                                            "required": [
+                                                "id",
+                                                "starts_at",
+                                                "capacity",
+                                                "min_age",
+                                                "price",
+                                                "route_id",
+                                                "created_at",
+                                                "updated_at",
+                                                "archived"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "number",
+                                                    "example": 1
+                                                },
+                                                "starts_at": {
+                                                    "type": "string",
+                                                    "example": "2000-01-01 08:00"
+                                                },
+                                                "capacity": {
+                                                    "type": "number",
+                                                    "example": 5
+                                                },
+                                                "min_age": {
+                                                    "type": "number",
+                                                    "example": 16
+                                                },
+                                                "price": {
+                                                    "type": "number",
+                                                    "example": 9999
+                                                },
+                                                "route_id": {
+                                                    "type": "number",
+                                                    "example": 1
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2000-01-01T12:00:00.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "example": "2000-01-01T12:00:00.000000Z"
+                                                },
+                                                "archived": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Экскурсия не найдена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trip not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации данных",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "starts_at": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "The starts at field is required."
+                                                    ]
+                                                },
+                                                "capacity": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "The capacity field is required."
+                                                    ]
+                                                },
+                                                "min_age": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "The min age field is required."
+                                                    ]
+                                                },
+                                                "price": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "The price field is required."
+                                                    ]
+                                                },
+                                                "route_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "The route id field is required."
+                                                    ]
+                                                },
+                                                "archived": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "The archived field is required."
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Роли пользователя не достаточно для выполнения операции",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The role does not match the requirements"
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": []
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Пользователь не авторизирован",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/trip/complex": {
             "post": {
                 "tags": [
@@ -711,7 +1142,7 @@
                 ],
                 "summary": "Создать экскурсию, маршрут и точки",
                 "description": "Создаёт и возвращает новую экскурсию, маршрут и привязанные к нему точки. Всё в одном запросе",
-                "operationId": "1d872d3e3a28c31d4c30c076f70e11d7",
+                "operationId": "createComplexTrip",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -1092,7 +1523,7 @@
                 ],
                 "summary": "Получить все экскурсии",
                 "description": "Запрос для получения списка всех экскурсий вместе с точками и маршрутами (пагинация лень пока)",
-                "operationId": "1be28363c04c1cd7c100107417e944c1",
+                "operationId": "getTrips",
                 "responses": {
                     "200": {
                         "description": "Расширенный список эскурсий",
@@ -1159,12 +1590,12 @@
                 ],
                 "summary": "Поиск по экскурсиям, точкам и маршрутам",
                 "description": "Запрос для поиска по всем маршрутам, точкам и экскурсиям. Ищет в полях description, name и start_location",
-                "operationId": "8bedf832894d55c9c5a4693541b0b2a5",
+                "operationId": "searchTrips",
                 "parameters": [
                     {
                         "name": "search",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string",
                             "example": "Ижевск"
@@ -1254,194 +1685,6 @@
                                                 }
                                             },
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/trip/{id}": {
-            "get": {
-                "tags": [
-                    "Экскурсии"
-                ],
-                "summary": "Получить экскурсию",
-                "description": "Запрос для получения экскурсии и её связей по ID",
-                "operationId": "0be1eabee1d369814d9a15ff64f95dfb",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID экскурсии",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Экскурсия, маршрут и точки",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": "true"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Trip found"
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "route": {
-                                                        "properties": {
-                                                            "start_location": {
-                                                                "type": "string",
-                                                                "example": "Ижевск"
-                                                            },
-                                                            "duration": {
-                                                                "type": "number",
-                                                                "example": 10
-                                                            },
-                                                            "updated_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "created_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "id": {
-                                                                "type": "number",
-                                                                "example": 1
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    },
-                                                    "trip": {
-                                                        "properties": {
-                                                            "starts_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01 08:00"
-                                                            },
-                                                            "capacity": {
-                                                                "type": "number",
-                                                                "example": 5
-                                                            },
-                                                            "min_age": {
-                                                                "type": "number",
-                                                                "example": 16
-                                                            },
-                                                            "price": {
-                                                                "type": "number",
-                                                                "example": 9999
-                                                            },
-                                                            "route_id": {
-                                                                "type": "number",
-                                                                "example": 1
-                                                            },
-                                                            "updated_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "created_at": {
-                                                                "type": "string",
-                                                                "example": "2000-01-01T00:00:00.000000Z"
-                                                            },
-                                                            "id": {
-                                                                "type": "number",
-                                                                "example": 1
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    },
-                                                    "points": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "required": [
-                                                                "file_name",
-                                                                "description",
-                                                                "day_of_the_route",
-                                                                "name"
-                                                            ],
-                                                            "properties": {
-                                                                "file_name": {
-                                                                    "type": "string",
-                                                                    "example": "points/pCobXrHQoHbiI2JDiWMJj8zVKLEu26qFIMogpwcD.jpg"
-                                                                },
-                                                                "description": {
-                                                                    "type": "string",
-                                                                    "example": "Описание точки"
-                                                                },
-                                                                "day_of_the_route": {
-                                                                    "type": "number",
-                                                                    "example": 1
-                                                                },
-                                                                "name": {
-                                                                    "type": "string",
-                                                                    "example": "Название точки"
-                                                                },
-                                                                "updated_at": {
-                                                                    "type": "string",
-                                                                    "example": "2000-01-01T00:00:00.000000Z"
-                                                                },
-                                                                "created_at": {
-                                                                    "type": "string",
-                                                                    "example": "2000-01-01T00:00:00.000000Z"
-                                                                },
-                                                                "pivot": {
-                                                                    "properties": {
-                                                                        "route_id": {
-                                                                            "type": "number",
-                                                                            "example": 2
-                                                                        },
-                                                                        "point_id": {
-                                                                            "type": "number",
-                                                                            "example": 2
-                                                                        },
-                                                                        "day_of_the_route": {
-                                                                            "type": "number",
-                                                                            "example": 1
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                }
-                                                            },
-                                                            "type": "object"
-                                                        }
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Экскурсия не найдена",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Trip not found"
                                         }
                                     },
                                     "type": "object"

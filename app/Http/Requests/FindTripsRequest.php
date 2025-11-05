@@ -16,6 +16,13 @@ class FindTripsRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->mergeIfMissing([
+            'search' => '',
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +31,7 @@ class FindTripsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'search' => 'required|string',
+            'search' => 'nullable|string',
         ];
     }
 

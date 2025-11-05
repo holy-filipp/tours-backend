@@ -22,11 +22,11 @@ class PatchTripRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'starts_at' => 'required|date_format:Y-m-d H:i',
-            'capacity' => 'required|integer',
-            'min_age' => 'required|integer',
-            'price' => 'required|integer',
-            'route_id' => 'required|integer|exists:routes,id',
+            'starts_at' => 'date_format:Y-m-d H:i',
+            'capacity' => 'integer',
+            'min_age' => 'integer',
+            'price' => 'integer',
+            'route_id' => 'integer|exists:routes,id',
             'archived' => 'boolean'
         ];
     }
